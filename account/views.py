@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 
 class RegisterView(View):
+    #Class variables for clean code purpose.
     form_class = UserRegistrationForm
     template_name = 'account/register.html'
     
