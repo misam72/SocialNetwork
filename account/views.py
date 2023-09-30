@@ -17,5 +17,9 @@ class RegisterView(View):
             messages.success(request, 'you registered successfully',
                              'success')
             return redirect('home:home')
+        # if the data of the form would be invalid(like empty...) form gets
+        # new data with messages. we can use that data and render a new page 
+        # for showing them to user.
+        return render(request, 'account/register.html', {'form': form})
         
 
