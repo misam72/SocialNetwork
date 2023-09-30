@@ -15,7 +15,7 @@ class UserRegistrationForm(forms.Form):
     # validating form data, after we finished our work we have to return the variable
     # that we used(validated).
     def clean_email(self):
-        # we must return email.
+        # we must return the email.
         email = self.cleaned_data['email']
         # using exist is more efficent and fatser. we can use below code without using 
         # exists() method but it is not efficent.
@@ -25,7 +25,7 @@ class UserRegistrationForm(forms.Form):
         return email
     
     def clean_username(self):
-        # we have to return username
+        # we have to return the username
         username = self.cleaned_data['username']
         user = User.objects.filter(username=username).exists()
         if user:
