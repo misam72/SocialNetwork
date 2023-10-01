@@ -1,3 +1,5 @@
+from typing import Any
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.views import View
 from .forms import UserRegistrationForm, UserLoginForm
@@ -10,7 +12,14 @@ class UserRegisterView(View):
     # Class variables for clean code purpose.
     form_class = UserRegistrationForm
     template_name = "account/register.html"
-
+    
+    # This method runs before all other methods(get, post ,...) and if the user had
+    # logged in we will not let him to access the reister page via direct link.
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if request.user.is_authenticated():
+            return redirect('home:home')
+        return super().dispatch(request, *args, **kwargs)
+    
     def get(self, request):
         form = self.form_class()
         return render(request, self.template_name, {"form": form})
@@ -31,6 +40,14 @@ class UserRegisterView(View):
 class UserLoginView(View):
     form_class = UserLoginForm
     template_name = "account/login.html"
+    
+    # This method runs before all other methods(get, post ,...) and if the user had
+    # logged in we will not let him to access the reister page via direct link.
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if request.user.is_authenticated():
+            return redirect('home:home')
+        return super().dispatch(request, *args, **kwargs)
+    
     def get(self, request):
         form = self.form_class()
         return render(request, self.template_name, {'form': form})
