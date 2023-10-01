@@ -16,7 +16,7 @@ class UserRegisterView(View):
     # This method runs before all other methods(get, post ,...) and if the user had
     # logged in we will not let him to access the reister page via direct link.
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             return redirect('home:home')
         return super().dispatch(request, *args, **kwargs)
     
@@ -44,7 +44,7 @@ class UserLoginView(View):
     # This method runs before all other methods(get, post ,...) and if the user had
     # logged in we will not let him to access the reister page via direct link.
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             return redirect('home:home')
         return super().dispatch(request, *args, **kwargs)
     
