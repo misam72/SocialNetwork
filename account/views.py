@@ -13,14 +13,14 @@ class UserRegisterView(View):
     # Class variables for clean code purpose.
     form_class = UserRegistrationForm
     template_name = "account/register.html"
-    
+
     # This method runs before all other methods(get, post ,...) and if the user had
     # logged in we will not let him to access the reister page via direct link.
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         if request.user.is_authenticated:
-            return redirect('home:home')
+            return redirect("home:home")
         return super().dispatch(request, *args, **kwargs)
-    
+
     def get(self, request):
         form = self.form_class()
         return render(request, self.template_name, {"form": form})
@@ -41,37 +41,40 @@ class UserRegisterView(View):
 class UserLoginView(View):
     form_class = UserLoginForm
     template_name = "account/login.html"
-    
+
     # This method runs before all other methods(get, post ,...) and if the user had
-    # logged in we will not let him to access the reister page via direct link.
+    # logged in we will not let him to access the login page via direct link.
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         if request.user.is_authenticated:
-            return redirect('home:home')
+            return redirect("home:home")
         return super().dispatch(request, *args, **kwargs)
-    
+
     def get(self, request):
         form = self.form_class()
-        return render(request, self.template_name, {'form': form})
+        return render(request, self.template_name, {"form": form})
 
     def post(self, request):
         form = self.form_class(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
-            user = authenticate(request, username=cd['username'], password=cd['password'])
+            user = authenticate(
+                request, username=cd["username"], password=cd["password"]
+            )
             if user is not None:
                 login(request, user)
-                messages.success(request, 'you logged in successfully', 'success')
-                return redirect('home:home')
-            messages.error(request, 'username or password is wrong', 'warning')
-        return render(request, self.template_name, {'form': form})
-            
+                messages.success(request, "you logged in successfully", "success")
+                return redirect("home:home")
+            messages.error(request, "username or password is wrong", "warning")
+        return render(request, self.template_name, {"form": form})
+
+
 class UserLogoutView(LoginRequiredMixin, View):
     # For abstaning/avoiding the user from accessing logout address we have to use
     # LoginRequiredMixin and below variable or LOGIN_URL in settings.py for redirecting
     # the user to login.html page.
-    
+
     # login_url = "/account/login/"
     def get(self, request):
         logout(request)
-        messages.success(request, 'you logged out successfully', 'success')
-        return redirect('home:home')
+        messages.success(request, "you logged out successfully", "success")
+        return redirect("home:home")
