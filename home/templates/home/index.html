@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  This is home page
+  <div class="card">
+      {% for post in posts%}
+        <a href="{{post.get_absulute_url}}" class="card-body">{{post.body|truncatewords:5}}</a>
+      {% endfor %}
+  </div>
 {% endblock %}

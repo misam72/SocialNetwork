@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
+from home.models import Post
 
 
 class UserRegisterView(View):
@@ -82,5 +83,9 @@ class UserLogoutView(LoginRequiredMixin, View):
 
 class UserProfileView(LoginRequiredMixin, View):
     def get(self, request, user_id):
+        # get() will return only one record and if there are more records it will raise 
+        # an error.
         user = User.objects.get(id=user_id)
-        return render(request, 'account/profile.html', {'user': user})
+        # filter() will return 0 or more records in a query-set/list.
+        posts = Post.objects.filter(user=user)
+        return render(request, 'account/profile.html', {'user': user, 'posts':posts})

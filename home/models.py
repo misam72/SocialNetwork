@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -13,3 +14,6 @@ class Post(models.Model):
     
     def __str__(self):
         return f"{self.id}- {self.user}, {self.slug}"
+    
+    def get_absulute_url(self):
+        return reverse('home:post_detail', args=(self.id, self.slug))
