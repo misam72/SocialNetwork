@@ -1,6 +1,6 @@
 from typing import Any
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from .forms import UserRegistrationForm, UserLoginForm
 from django.contrib.auth.models import User
@@ -85,7 +85,7 @@ class UserProfileView(LoginRequiredMixin, View):
     def get(self, request, user_id):
         # get() will return only one record and if there are more records it will raise 
         # an error.
-        user = User.objects.get(id=user_id)
+        user = get_object_or_404(User, id=user_id)
         # filter() will return 0 or more records in a query-set/list.
         posts = Post.objects.filter(user=user)
         return render(request, 'account/profile.html', {'user': user, 'posts':posts})
