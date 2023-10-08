@@ -12,6 +12,8 @@ from django.utils.text import slugify
 
 class HomeView(View):
     def get(self, request):
+        # arrange posts by create time, newest is first(-created).random change(?). only works here for this view.
+        # posts = Post.objects.order_by('-created')
         posts = Post.objects.all()
         return render(request, "home/index.html", {"posts": posts})
 

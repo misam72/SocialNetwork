@@ -12,6 +12,11 @@ class Post(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     
+    class Meta:
+        # For every where that we want use ordering.
+        ordering = ['-created']
+    
+    
     def __str__(self):
         return f"{self.id}- {self.user}, {self.slug}"
     
