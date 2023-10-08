@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-o$(6vd)yo*5iu6juifdund=2!c3-f2ml1$ti8=*)82_hf@=x2%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -140,3 +140,14 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 LOGIN_URL = "/account/login/"
+
+# sending email settings
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = 'smtp.freesmtpservers.com'
+# EMAIL_HOST_USER = 'misamtrader2020@gmail.com'
+EMAIL_PORT = 25
+# EMAIL_HOST_PASSWORD = '123 456 789'
+# Sending email securly:
+EMAIL_TLS = True
+# Email singing:
+DEFAULT_FROM_EMIAL = 'Good Bye'
