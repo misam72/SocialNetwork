@@ -103,3 +103,11 @@ class UserPasswordResetView(auth_views.PasswordResetView):
 class UserPasswordResetDoneView(auth_views.PasswordResetDoneView):
     # After sending an email for user we'll show this html page to user.
     template_name = "account/password_reset_done.html"
+    
+class UserPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+    template_name = 'account/password_reset_confirm.html'
+    success_url = reverse_lazy('account:password_reset_complete')
+    
+
+class UserPasswordResetCompleteView(auth_views.PasswordResetCompleteView):
+    template_name = 'account/password_reset_complete.html'
