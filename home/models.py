@@ -3,7 +3,9 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 
 class Post(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    # Note:
+    # related_name is for backward relation.
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
     body = models.TextField()
     slug = models.SlugField()
     # Note:

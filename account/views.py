@@ -89,7 +89,10 @@ class UserProfileView(LoginRequiredMixin, View):
         # an error.
         user = get_object_or_404(User, id=user_id)
         # filter() will return 0 or more records in a query-set/list.
-        posts = Post.objects.filter(user=user)
+        # posts = Post.objects.filter(user=user)
+        
+        # using backward relation
+        posts = user.posts.all()
         return render(request, "account/profile.html", {"user": user, "posts": posts})
 
 
