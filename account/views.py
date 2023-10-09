@@ -1,4 +1,5 @@
 from typing import Any
+from django import http
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
@@ -46,6 +47,10 @@ class UserLoginView(View):
     form_class = UserLoginForm
     template_name = "account/login.html"
 
+    def setup(self, request: HttpRequest, *args: Any, **kwargs: Any):
+        # with next value that is in url we can redirect the user to last page that he has seen
+        self.next = request.GET.get('next')
+        return super().setup(request, *args, **kwargs)
     # This method runs before all other methods(get, post ,...) and if the user had
     # logged in we will not let him to access the login page via direct link.
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
@@ -67,6 +72,9 @@ class UserLoginView(View):
             if user is not None:
                 login(request, user)
                 messages.success(request, "you logged in successfully", "success")
+                if self.next:
+                    # with using self.next we redirect user to the page that he had been on it befor login.
+                    return redirect(self.next)
                 return redirect("home:home")
             messages.error(request, "username or password is wrong", "warning")
         return render(request, self.template_name, {"form": form})
