@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post
+from .models import Post, Comment
 
 # Method 1
 #Customizing the page of Post model in django admin.
@@ -13,8 +13,15 @@ class PostAdmin(admin.ModelAdmin):
     # first, maximum length is 50 charachters. Just works one time in admin panel not
     # any where else.
     prepopulated_fields = {'slug':('body',)}
-    # for user field we can select users base on its id.Is good for when the number of 
-    # users are a lot.
+    # for user field we can select users base on its id when adding a post in admin page.
+    # It is good for when the number of users are a lot.
     raw_id_fields = ('user',)
 
 admin.site.register(Post, PostAdmin)
+
+
+#Method 2
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('user', 'post', 'created', 'is_reply',)
+    raw_id_fields = ('user', 'post', 'reply',)

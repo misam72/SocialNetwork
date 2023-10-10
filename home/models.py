@@ -22,5 +22,21 @@ class Post(models.Model):
     def __str__(self):
         return f"{self.id}- {self.user}, {self.slug}"
     
+    # using in index.html for getting url. it is better than hard coded urls and 
+    # good for when we want change many urls.
     def get_absulute_url(self):
         return reverse('home:post_detail', args=(self.id, self.slug))
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ucomments')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='pcomments')
+    # reply field pointes to this/Comment model. we can use Comment instead of self.
+    reply = models.ForeignKey('self', on_delete=models.CASCADE, related_name='rcomments', blank=True, null=True)
+    is_reply = models.BooleanField(default=False)
+    body = models.TextField(max_length=400)
+    created = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self) -> str:
+        return f'{self.user} - {self.body[:30]}'
+    
