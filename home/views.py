@@ -2,7 +2,7 @@ from typing import Any
 from django import http
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from .models import Post, Comment
+from .models import Post, Comment, Vote
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from .forms import PostCreateUpdateForm, CommentCreateForm, CommentReplyForm
@@ -31,9 +31,13 @@ class PostDetailView(View):
     
     def get(self, request, *args: Any, **kwargs: Any):
         comments = self.post_instance.pcomments.filter(is_reply=False)
+        can_like = False
+        if request.user.is_authenticated and self.post_instance.user_can_like(user=request.user):
+            can_like = True
         return render(request, "home/detail.html", {"post": self.post_instance, "comments": comments,
                                                     "form": self.form_class,
-                                                    'reply_form':self.form_class_reply})
+                                                    'reply_form':self.form_class_reply,
+                                                    'can_like':can_like})
     
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
@@ -134,3 +138,18 @@ class PostAddReplyView(View):
             reply.save()
             messages.success(request, 'Your reply submitted', 'success')
         return redirect('home:post_detail', post.id, post.slug)
+
+
+class PostLikeView(LoginRequiredMixin, View):
+    def get(self, request, post_id):
+        user = request.user
+        post = get_object_or_404(Post, id=post_id)
+        like = Vote.objects.filter(user=user, post=post)
+        if like.exists():
+            messages.error(request, 'You did this already', 'danger')
+        else:
+            Vote.objects.create(user=user, post=post)
+            messages.success(request, 'You liked this post', 'success')
+        
+        return redirect('home:post_detail', post.id, post.slug)
+        

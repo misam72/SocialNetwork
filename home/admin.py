@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post, Comment
+from .models import Post, Comment, Vote
 
 # Method 1
 #Customizing the page of Post model in django admin.
@@ -25,3 +25,6 @@ admin.site.register(Post, PostAdmin)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('user', 'post', 'body', 'created', 'is_reply',)
     raw_id_fields = ('user', 'post', 'reply',)
+
+
+admin.site.register(Vote)

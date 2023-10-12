@@ -26,6 +26,17 @@ class Post(models.Model):
     # good for when we want change many urls.
     def get_absulute_url(self):
         return reverse('home:post_detail', args=(self.id, self.slug))
+    
+    
+    def like_count(self):
+        return self.pvotes.count()
+    
+    
+    def user_can_like(self, user):
+        likes = user.uvotes.filter(post=self)
+        if likes.exists():
+            return False
+        return True
 
 
 class Comment(models.Model):
@@ -39,4 +50,10 @@ class Comment(models.Model):
     
     def __str__(self) -> str:
         return f'{self.user} - {self.body[:30]}'
+
+class Vote(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='uvotes')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='pvotes')
     
+    def __str__(self) -> str:
+        return f'{self.user} liked {self.post.slug}'

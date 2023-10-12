@@ -10,7 +10,12 @@
     <p><a href="{% url 'account:user_profile' post.user.id %}">{{post.user.username}}</a> 
         {{post.updated|date:"Y-M-d"}}</p>
     <p>{{post.body}}</p><hr/>
+
     {% if request.user.is_authenticated%}
+
+        <a href="{%url 'home:post_like' post.id %}" class="{% if not can_like %}disabled{%endif%} btn btn-primary col-md-2">Like</a>
+        <p>{{post.like_count}} likes</p>
+
         <form action="" method="POST">
             {% csrf_token %}
             {{form.as_p}}
@@ -19,6 +24,7 @@
     {%else%}
         <p class='alert alert-danger'>Only logged in users can comment</p>
     {%endif%}
+
     {%for comment in comments%}
         <div class='card bg-dark text-white'>
             <p class='card-header'>{{comment.user}} | {{comment.created|timesince}}</p>
