@@ -165,7 +165,7 @@ class EditUserView(LoginRequiredMixin, View):
         return render(request, 'account/edit_profile.html', {'form':form})
     
     def post(self, request):
-        # instance argument in blewo code is for the things that are not in the request.POST.
+        # instance argument in below code is for the things that are not in the request.POST.
         form = self.form_class(request.POST, instance=request.user.profile)
         if form.is_valid():
             form.save()
