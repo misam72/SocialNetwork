@@ -5,14 +5,15 @@
 
     {%if request.user.id == user.id%}
       <a href='{% url 'home:post_create' %}' class="btn btn-primary">Create</a>
+      <a href='{% url 'account:edit_user' %}' class="btn btn-info">Edit Profile</a>
     {%endif%}
-    
+    <br/>
     {%if request.user.id != user.id and not is_following %}
       <a  class='btn btn-primary' href='{%url 'account:user_follow' user.id%}'>Follow</a>
     {%elif request.user.id != user.id and is_following %}
       <a class='btn btn-primary' href='{%url 'account:user_unfollow' user.id%}'>Unfollow</a>
     {%endif%}
-    
+    <br/>
     <div class="card">
         {% for post in posts%}
           <a href="{{post.get_absulute_url}}" class="card-body">{{post.body|truncatewords:5}}</a>

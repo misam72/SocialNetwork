@@ -12,6 +12,7 @@ from home.models import Post
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
 from .models import Relation
+from .forms import EditUserForm
 
 
 class UserRegisterView(View):
@@ -152,3 +153,28 @@ class UserUnfollowView(LoginRequiredMixin, View):
         else:
             messages.error(request, 'you did not follow this user', 'danger')
         return redirect('account:user_profile', user_id)
+
+
+class EditUserView(LoginRequiredMixin, View):
+    form_class = EditUserForm
+    
+    def get(self, request):
+        # With initial value we add extra fields on the form.
+        form = self.form_class(instance=request.user.profile, 
+                               initial={'email': request.user.email})
+        return render(request, 'account/edit_profile.html', {'form':form})
+    
+    def post(self, request):
+        # instance argument in blewo code is for the things that are not in the request.POST.
+        form = self.form_class(request.POST, instance=request.user.profile)
+        if form.is_valid():
+            form.save()
+            request.user.email = form.cleaned_data['email']
+            request.user.save()
+            messages.success(request, 'Your data have been change.', 'success')
+            return redirect('account:user_profile', request.user.id)
+        
+        messages.error(request, 'Your data have not been change.', 'danger')
+        return redirect('account:user_profile', request.user.id)
+        
+        
